@@ -2,7 +2,8 @@
 
 List team members here.
 
-Insert Github repository link here.
+github repository link
+git@github.com:usc-ee250-spring2021/lab02-Victorhu1.git
 """
 
 """python3 interpreters in Ubuntu (and other linux distros) will look in a 
@@ -17,22 +18,63 @@ performance. Because of this, you will not find this in the default directories.
 import sys
 import time
 # By appending the folder of all the GrovePi libraries to the system path here,
-# we are successfully `import grovepi`
+# we are successfully `import grifovepi`
 sys.path.append('../../Software/Python/')
 # This append is to support importing the LCD library.
 sys.path.append('../../Software/Python/grove_rgb_lcd')
 
 import grovepi
+from grove_rgb_lcd import *
 
 """This if-statement checks if you are running this python file directly. That 
 is, if you run `python3 grovepi_sensors.py` in terminal, this if-statement will 
 be true"""
 if __name__ == '__main__':
-    PORT = 4    # D4
+    PORT = 3    # D3
+    potentiometer = 2
+    setRGB(175,238,238)
+    grovepi.pinMode(potentiometer, "INPUT")
+    adc_ref = 5
+    grove_vcc = 5
+    full_angle = 1023
+    result = ""
+
 
     while True:
         #So we do not poll the sensors too quickly which may introduce noise,
         #sleep for a reasonable time of 200ms between each iteration.
         time.sleep(0.2)
+        sensor_value = grovepi.analogRead(potentiometer)
+        voltage = round((int)(sensor_value)*adc_ref/1023,2)
+        degrees = round((voltage * full_angle) / grove_vcc, 2)
+        sonic = grovepi.ultrasonicRead(PORT)
+        if(sonic < degrees):
+                result = " OBJ PRES "
+        else:
+                result = "          "
+        setText_norefresh(str(int(degrees)) + "cm" + result + "\n" + str(sonic) + "cm")
+        print(sonic)
 
-        print(grovepi.ultrasonicRead(PORT))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
